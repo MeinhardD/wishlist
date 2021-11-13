@@ -19,7 +19,7 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'Could not find the wishlist',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         return response()->json([
@@ -41,7 +41,7 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'A password is required',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         try {
@@ -50,7 +50,7 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'Could not create a wishlist',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         return response()->json([
@@ -71,7 +71,7 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'Validation error',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         // TODO: figure out how we want to update the wishlist
@@ -87,7 +87,7 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'Password required',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         try {
@@ -96,7 +96,7 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'Could not find the wishlist',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         if (Hash::check($password, $wishlist->password)) {
@@ -110,6 +110,6 @@ class WishlistController extends Controller
         return response()->json([
             'message' => 'Wrong password',
             'success' => false,
-        ], 500);
+        ]);
     }
 }

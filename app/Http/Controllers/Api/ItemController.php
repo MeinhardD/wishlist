@@ -29,7 +29,7 @@ class ItemController extends Controller
             return response()->json([
                 'message' => 'Validation error',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         $wishlist_id = Crypt::decrypt($attributes['unique_link']);
@@ -51,7 +51,7 @@ class ItemController extends Controller
                 return response()->json([
                     'message' => 'Could not create item',
                     'success' => false,
-                ], 500);
+                ]);
             }
 
             return response()->json([
@@ -64,7 +64,7 @@ class ItemController extends Controller
         return response()->json([
             'message' => 'Wrong password',
             'success' => false,
-        ], 500);
+        ]);
     }
 
     public function update(Request $request)
@@ -82,7 +82,7 @@ class ItemController extends Controller
             return response()->json([
                 'message' => 'Validation error',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         $id = $attributes['id'];
@@ -96,7 +96,7 @@ class ItemController extends Controller
             return response()->json([
                 'message' => 'Could not find the item',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         if (Hash::check($password, $item->wishlist->password)) {
@@ -119,7 +119,7 @@ class ItemController extends Controller
         return response()->json([
             'message' => 'Wrong password',
             'success' => false,
-        ], 500);
+        ]);
     }
 
     public function destroy($id, Request $request)
@@ -132,7 +132,7 @@ class ItemController extends Controller
             return response()->json([
                 'message' => 'A password is required',
                 'success' => false,
-            ], 500);
+            ]);
         }
         
         try {
@@ -141,7 +141,7 @@ class ItemController extends Controller
             return response()->json([
                 'message' => 'Could not find the item',
                 'success' => false,
-            ], 500);
+            ]);
         }
 
         if (Hash::check($password, $item->wishlist->password)) {
@@ -155,6 +155,6 @@ class ItemController extends Controller
         return response()->json([
             'message' => 'Wrong password',
             'success' => false,
-        ], 500);
+        ]);
     }
 }
