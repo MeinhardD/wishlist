@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\WishlistController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/wishlists/{unique_link}', [WishlistController::class, 'show']);
 Route::post('/wishlists', [WishlistController::class, 'store']);
 Route::delete('/wishlists/{unique_link}', [WishlistController::class, 'destroy']);
+
+Route::post('/items/store', [ItemController::class, 'store']);
+Route::post('/items/update', [ItemController::class, 'update']);
+Route::delete('/items/{id}', [ItemController::class, 'destroy']);

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Wishlist;
 use Exception;
 use Illuminate\Http\Request;
@@ -24,7 +25,9 @@ class WishlistController extends Controller
         return response()->json([
             'message' => 'Got the wishlist',
             'success' => true,
-            'items' => $wishlist->items,
+            'items' => $wishlist->items()
+                ->orderBy('category', 'desc')
+                ->get(),
         ]);
     }
 
