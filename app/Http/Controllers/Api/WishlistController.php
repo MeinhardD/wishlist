@@ -14,9 +14,9 @@ class WishlistController extends Controller
 {
     public function show(String $unique_link)
     {
-        try {
-            $wishlist = Wishlist::find(Crypt::decrypt($unique_link));
-        } catch (Exception $e) {
+        $wishlist = Wishlist::find(Crypt::decrypt($unique_link));
+
+        if (!$wishlist) {
             return response()->json([
                 'message' => 'Could not find the wishlist',
                 'success' => false,
