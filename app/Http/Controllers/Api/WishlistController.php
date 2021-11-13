@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class WishlistController extends Controller
 {
@@ -97,6 +98,10 @@ class WishlistController extends Controller
                 'message' => 'Could not find the wishlist',
                 'success' => false,
             ]);
+        }
+        
+        foreach ($wishlist->items as $item) {
+            if ($item->icon_name) Storage::delete('/public/images/' . $item->icon_name);
         }
 
         if (Hash::check($password, $wishlist->password)) {

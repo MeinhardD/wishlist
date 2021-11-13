@@ -144,6 +144,8 @@ class ItemController extends Controller
             ]);
         }
 
+        if ($item->icon_name) Storage::delete('/public/images/' . $item->icon_name);
+
         if (Hash::check($password, $item->wishlist->password)) {
             $item->delete();
             return response()->json([
