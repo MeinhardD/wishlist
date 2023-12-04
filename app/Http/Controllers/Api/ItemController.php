@@ -7,8 +7,6 @@ use App\Models\Item;
 use App\Models\Wishlist;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,16 +27,24 @@ class ItemController extends Controller
             return response()->json([
                 'message' => 'Validation error',
                 'success' => false,
+                'exception' => $e->getMessage(),
             ]);
         }
 
-        $wishlist_id = Crypt::decrypt($attributes['unique_link']);
+        $random_string = $attributes['unique_link'];
         unset($attributes['unique_link']);
-        $attributes['wishlist_id'] = $wishlist_id;
         $password = $attributes['password'];
         unset($attributes['password']);
 
-        if (Hash::check($password, Wishlist::find($wishlist_id)->password)) {
+        $wishlist = Wishlist::where('random_string', $random_string)->first();
+        if (!$wishlist) {
+            return response()->json([
+                'message' => 'Could not find the wishlist',
+                'success' => false,
+            ]);
+        }
+
+        if (Hash::check($password, $wishlist->password)) {
             if ($icon = $request->file('icon')) {
                 unset($attributes['icon']);
                 $icon_name = explode('/', $icon->store('/public/images'))[2];
@@ -46,11 +52,12 @@ class ItemController extends Controller
             }
 
             try {
-                $item = Item::create($attributes);
-            } catch (Exception) {
+                $item = $wishlist->items()->create($attributes);
+            } catch (Exception $e) {
                 return response()->json([
                     'message' => 'Could not create item',
                     'success' => false,
+                    'exception' => $e->getMessage(),
                 ]);
             }
 

@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\WishlistController;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 
 /*
@@ -45,7 +44,7 @@ Route::post('/unlock', function (Request $request) {
     }
 
     try {
-        $wishlist = Wishlist::find(Crypt::decrypt($request->unique_link));
+        $wishlist = Wishlist::where('random_string', $request->unique_link)->firstOrFail();
     } catch (Exception) {
         return response()->json([
             'message' => 'Could not find the wishlist to unlock',

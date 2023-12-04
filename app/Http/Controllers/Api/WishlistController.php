@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Wishlist;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +14,7 @@ class WishlistController extends Controller
 {
     public function show(String $unique_link)
     {
-        $wishlist = Wishlist::find(Crypt::decrypt($unique_link));
+        $wishlist = Wishlist::where('random_string', $unique_link)->first();
 
         if (!$wishlist) {
             return response()->json([
@@ -42,22 +42,25 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'A password is required',
                 'success' => false,
+                'exception' => $e->getMessage(),
             ]);
         }
 
+        $random_string = Str::random();
         try {
-            $id = Wishlist::create($attributes)->id;
+            Wishlist::create([...$attributes, 'random_string' => $random_string]);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Could not create a wishlist',
                 'success' => false,
+                'exception' => $e->getMessage(),
             ]);
         }
 
         return response()->json([
             'message' => 'Created a new wishlist',
             'success' => true,
-            'unique_link' => Crypt::encrypt($id),
+            'unique_link' => $random_string,
         ]);
     }
 
@@ -72,6 +75,7 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'Validation error',
                 'success' => false,
+                'exception' => $e->getMessage(),
             ]);
         }
 
@@ -88,15 +92,17 @@ class WishlistController extends Controller
             return response()->json([
                 'message' => 'Password required',
                 'success' => false,
+                'exception' => $e->getMessage(),
             ]);
         }
 
         try {
-            $wishlist = Wishlist::find(Crypt::decrypt($unique_link));
+            $wishlist = Wishlist::where('random_string', $unique_link)->firstOrFail();
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Could not find the wishlist',
                 'success' => false,
+                'exception' => $e->getMessage(),
             ]);
         }
 
