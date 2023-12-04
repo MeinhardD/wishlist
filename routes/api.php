@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Hash;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+/* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+*     return $request->user();
+* }); */
 
 Route::get('/wishlists/{unique_link}', [WishlistController::class, 'show']);
 Route::post('/wishlists', [WishlistController::class, 'store']);
@@ -37,7 +37,7 @@ Route::post('/unlock', function (Request $request) {
             'unique_link' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
         return response()->json([
             'message' => 'Both the unique link and a password are required',
             'success' => false,
@@ -46,7 +46,7 @@ Route::post('/unlock', function (Request $request) {
 
     try {
         $wishlist = Wishlist::find(Crypt::decrypt($request->unique_link));
-    } catch (Exception $e) {
+    } catch (Exception) {
         return response()->json([
             'message' => 'Could not find the wishlist to unlock',
             'success' => false,

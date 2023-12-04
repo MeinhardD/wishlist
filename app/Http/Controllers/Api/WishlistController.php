@@ -99,7 +99,7 @@ class WishlistController extends Controller
                 'success' => false,
             ]);
         }
-        
+
         foreach ($wishlist->items as $item) {
             if ($item->icon_name) Storage::delete('/public/images/' . $item->icon_name);
         }

@@ -89,7 +89,7 @@ class ItemController extends Controller
         unset($attributes['id']);
         $password = $attributes['password'];
         unset($attributes['password']);
-        
+
         try {
             $item = Item::find($id);
         } catch (Exception) {
@@ -134,7 +134,7 @@ class ItemController extends Controller
                 'success' => false,
             ]);
         }
-        
+
         try {
             $item = Item::find($id);
         } catch (Exception) {
