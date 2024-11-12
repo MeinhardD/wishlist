@@ -14,14 +14,17 @@ class WishlistController extends Controller
 {
     public function show(String $unique_link)
     {
-        $wishlist = Wishlist::where('random_string', $unique_link)->first();
+        $wishlist_from_personal = Wishlist::where('random_string', $unique_link)->first();
+        $wishlist_from_share = Wishlist::where('random_share_string', $unique_link)->first();
 
-        if (!$wishlist) {
+        if (!$wishlist_from_personal && !$wishlist_from_share) {
             return response()->json([
                 'message' => 'Could not find the wishlist',
                 'success' => false,
             ]);
         }
+
+        $wishlist = $wishlist_from_personal ?? $wishlist_from_share;
 
         return response()->json([
             'message' => 'Got the wishlist',
@@ -29,6 +32,8 @@ class WishlistController extends Controller
             'items' => $wishlist->items()
                 ->orderBy('category', 'desc')
                 ->get(),
+            'share_link' => $wishlist->random_share_string,
+            'used_share_link' => !!$wishlist_from_share,
         ]);
     }
 
@@ -47,8 +52,9 @@ class WishlistController extends Controller
         }
 
         $random_string = Str::random();
+        $random_share_string = Str::random();
         try {
-            Wishlist::create([...$attributes, 'random_string' => $random_string]);
+            Wishlist::create([...$attributes, 'random_string' => $random_string, 'random_share_string' => $random_share_string]);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Could not create a wishlist',

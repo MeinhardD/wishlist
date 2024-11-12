@@ -18,6 +18,7 @@ class Item extends Model
      */
     protected $hidden = [
         'wishlist_id',
+        'gifter',
     ];
 
     public function wishlist(): BelongsTo
